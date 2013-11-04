@@ -3,10 +3,12 @@ all: check
 .PHONY:all clean check
 .SUFFIXES:
 
+FC=mpif90
 LD=$(FC)
 
 FCFLAGS+=-fimplicit-none
 FCFLAGS+=-Wall -Wextra -Werror
+FCFLAGS+=-Iinclude -Jmod
 
 # Find pFunit files
 FCFLAGS+=-I$(PFUNIT)/mod
@@ -58,9 +60,7 @@ bin/%: obj/%.o $$(OBJREQ_%.o)
 $(TESTS):$(PFUNIT)/include/driver.F90
 test/%: obj/%.o $$(OBJREQ_%.o)
 	@mkdir -p $(dir $@)
-	echo "ADD_TEST_SUITE($*_suite)" > obj/testSuites.inc
-	$(FC) $(FCFLAGS) $(LDFLAGS) -L$(PFUNIT)/lib -Iobj -DUSE_MPI -Wno-unused-parameter -o $@ $^ $(LDLIBS) -lpfunit
-	rm obj/testSuites.inc
+	$(FC) $(FCFLAGS) $(LDFLAGS) -L$(PFUNIT)/lib -DUSE_MPI -DSUITE=$*_suite -Wno-unused-parameter -o $@ $^ $(LDLIBS) -lpfunit
 
 # Dependency generation
 deps/%.d: %.f90
