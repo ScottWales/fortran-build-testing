@@ -8,7 +8,7 @@ LD=$(FC)
 
 FCFLAGS+=-fimplicit-none
 FCFLAGS+=-Wall -Wextra -Werror
-FCFLAGS+=-Iinclude -Jmod
+FCFLAGS+=-Iinclude -Imod -Jmod
 VPATH+=mod
 
 # Find pFunit files
@@ -59,7 +59,7 @@ bin/%: obj/%.o $$(OBJREQ_%.o)
 
 # Link tests with driver
 $(TESTS):$(PFUNIT)/include/driver.F90
-test/%: obj/%.o $$(OBJREQ_%.o)
+test/%: obj/%.o $$(OBJREQ_obj/%.F90)
 	@mkdir -p $(dir $@)
 	$(FC) $(FCFLAGS) $(LDFLAGS) -L$(PFUNIT)/lib -DUSE_MPI -DSUITE=$*_suite -Wno-unused-parameter -o $@ $^ $(LDLIBS) -lpfunit
 

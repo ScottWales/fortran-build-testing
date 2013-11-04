@@ -3,8 +3,25 @@
 @test
 subroutine construct()
     use field_mod
-
     type(field) :: a
 
     a%placeholder = 0
 end subroutine
+
+@test
+subroutine set()
+    use field_mod
+    type(field) :: a
+
+    a = 1
+end subroutine
+
+@test
+subroutine assign()
+    use field_mod
+    type(field) :: a, b
+
+    a = 1
+    b = a
+end subroutine
+

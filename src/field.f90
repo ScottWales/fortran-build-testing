@@ -21,4 +21,23 @@ module field_mod
     type field
         integer :: placeholder
     end type
+
+    interface assignment(=)
+        procedure assign_real
+        procedure assign_int
+    end interface
+contains
+    
+    subroutine assign_real(to, from)
+        type(field), intent(out) :: to
+        real, intent(in) :: from
+
+        to%placeholder = int(from)
+    end subroutine
+    subroutine assign_int(to, from)
+        type(field), intent(out) :: to
+        integer, intent(in) :: from
+
+        to%placeholder = from
+    end subroutine
 end module
