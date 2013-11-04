@@ -4,6 +4,11 @@ all: check
 .SUFFIXES:
 
 LD=$(FC)
+
+FCFLAGS+=-fimplicit-none
+FCFLAGS+=-Wall -Wextra -Werror
+
+# Find pFunit files
 FCFLAGS+=-I$(PFUNIT)/mod
 VPATH+=$(PFUNIT)/mod
 
@@ -22,11 +27,12 @@ check: $(TESTS)
 
 # Cleanup
 clean:
-	$(RM) -r bin test obj deps
+	$(RM) -r bin test obj deps mod
 
 # Compile source files
 obj/%.o: src/%.f90
 	@mkdir -p $(dir $@)
+	@mkdir -p mod
 	$(FC) $(FCFLAGS) -c -o $@ $<
 
 # Process pFunit tests
@@ -37,6 +43,7 @@ obj/%.F90: src/%.pf
 # Compile tests
 obj/%.o: obj/%.F90
 	@mkdir -p $(dir $@)
+	@mkdir -p mod
 	$(FC) $(FCFLAGS) -c -o $@ $<
 
 # Secondexpansion to calculate prerequisite modules
@@ -52,7 +59,7 @@ $(TESTS):$(PFUNIT)/include/driver.F90
 test/%: obj/%.o $$(OBJREQ_%.o)
 	@mkdir -p $(dir $@)
 	echo "ADD_TEST_SUITE($*_suite)" > obj/testSuites.inc
-	$(FC) $(FCFLAGS) $(LDFLAGS) -L$(PFUNIT)/lib -Iobj -o $@ $^ $(LDLIBS) -lpfunit
+	$(FC) $(FCFLAGS) $(LDFLAGS) -L$(PFUNIT)/lib -Iobj -DUSE_MPI -Wno-unused-parameter -o $@ $^ $(LDLIBS) -lpfunit
 	rm obj/testSuites.inc
 
 # Dependency generation
