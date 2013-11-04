@@ -9,6 +9,7 @@ LD=$(FC)
 FCFLAGS+=-fimplicit-none
 FCFLAGS+=-Wall -Wextra -Werror
 FCFLAGS+=-Iinclude -Jmod
+VPATH+=mod
 
 # Find pFunit files
 FCFLAGS+=-I$(PFUNIT)/mod
