@@ -18,6 +18,13 @@
 !! 
 
 module field_mod
+    private
+    public :: field
+    public :: assignment(=)
+    public :: operator(+)
+    public :: operator(*)
+    public :: operator(-)
+
     type field
         integer :: placeholder
     end type
@@ -35,6 +42,10 @@ module field_mod
         procedure scale_post_real
         procedure scale_pre_int
         procedure scale_post_int
+    end interface
+    interface operator(-)
+        procedure negate
+        procedure subtract_field
     end interface
 contains
     
@@ -85,5 +96,19 @@ contains
         integer, intent(in) :: a
 
         c = b * a
+    end function
+
+    function negate(a) result(c)
+        type(field) :: c
+        type(field), intent(in) :: a
+
+        c = (-1) * a
+    end function
+
+    function subtract_field(a, b) result(c)
+        type(field) :: c
+        type(field), intent(in) :: a, b
+
+        c = a + (-b)
     end function
 end module

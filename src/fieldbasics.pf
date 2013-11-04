@@ -46,3 +46,23 @@ subroutine scale()
     b = a*(-1)
     b = (-1)*a
 end subroutine
+
+@test
+subroutine negate()
+    use field_mod
+    type(field) :: a, b
+
+    a = 1
+    b = -a
+end subroutine
+
+@test
+subroutine subtract()
+    use field_mod
+    type(field) :: a, b, c
+
+    a = 1
+    b = a
+
+    c = a - b
+end subroutine
