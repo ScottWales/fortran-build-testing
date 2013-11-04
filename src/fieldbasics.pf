@@ -1,4 +1,4 @@
-! Basic stuff a field needs to do
+! Basic stuff a field needs to do, just making sure types and overloads work
 
 @test
 subroutine construct()
@@ -14,6 +14,7 @@ subroutine set()
     type(field) :: a
 
     a = 1
+    a = 9.99
 end subroutine
 
 @test
@@ -25,3 +26,13 @@ subroutine assign()
     b = a
 end subroutine
 
+@test
+subroutine add()
+    use field_mod
+    type(field) :: a, b, c
+
+    a = 1
+    b = a
+
+    c = a + b
+end subroutine

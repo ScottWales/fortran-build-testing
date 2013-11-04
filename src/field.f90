@@ -26,6 +26,10 @@ module field_mod
         procedure assign_real
         procedure assign_int
     end interface
+
+    interface operator(+)
+        procedure add_field
+    end interface
 contains
     
     subroutine assign_real(to, from)
@@ -40,4 +44,11 @@ contains
 
         to%placeholder = from
     end subroutine
+
+    function add_field(a, b) result(c)
+        type(field) :: c
+        type(field), intent(in) :: a, b
+
+        c%placeholder = a%placeholder + b%placeholder
+    end function
 end module
