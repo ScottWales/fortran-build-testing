@@ -30,11 +30,11 @@ module field_mod
 
     type field
         integer :: placeholder
-        contains
-            procedure :: pattern
     end type
 
     type, extends(field) :: scalarfield
+        contains
+            procedure :: pattern
     end type
 
     type, extends(field) :: vectorfield
@@ -65,20 +65,20 @@ module field_mod
 contains
     
     subroutine assign_real(to, from)
-        type(field), intent(out) :: to
+        type(scalarfield), intent(out) :: to
         real, intent(in) :: from
 
-        to%placeholder = int(from)
+        to = int(from)
     end subroutine
     subroutine assign_int(to, from)
-        type(field), intent(out) :: to
+        type(scalarfield), intent(out) :: to
         integer, intent(in) :: from
 
         to%placeholder = from
     end subroutine
 
     subroutine pattern(to, pat)
-        class(field), intent(inout) :: to
+        class(scalarfield), intent(inout) :: to
         interface 
             function pat(u,v,w) result(z)
                 real, intent(in) :: u, v, w

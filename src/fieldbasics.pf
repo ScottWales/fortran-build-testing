@@ -11,7 +11,7 @@ end subroutine
 @test
 subroutine set()
     use field_mod
-    type(field) :: a
+    type(scalarfield) :: a
 
     a = 1
     a = 9.99
@@ -22,7 +22,6 @@ subroutine assign()
     use field_mod
     type(field) :: a, b
 
-    a = 1
     b = a
 end subroutine
 
@@ -30,9 +29,6 @@ end subroutine
 subroutine add()
     use field_mod
     type(field) :: a, b, c
-
-    a = 1
-    b = a
 
     c = a + b
 end subroutine
@@ -42,10 +38,8 @@ subroutine scale()
     use field_mod
     type(field) :: a, b
 
-    a = 1
     b = a*(-1)
     b = (-1)*a
-
     b = a / 2
 end subroutine
 
@@ -54,7 +48,6 @@ subroutine negate()
     use field_mod
     type(field) :: a, b
 
-    a = 1
     b = -a
 end subroutine
 
@@ -62,9 +55,6 @@ end subroutine
 subroutine subtract()
     use field_mod
     type(field) :: a, b, c
-
-    a = 1
-    b = a
 
     c = a - b
 end subroutine
@@ -93,7 +83,7 @@ subroutine assign_pattern()
         end function 
     end interface
 
-    type(field) :: a
+    type(scalarfield) :: a
 
     call a%pattern(pat)
 end subroutine
