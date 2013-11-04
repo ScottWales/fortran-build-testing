@@ -24,6 +24,7 @@ module field_mod
     public :: operator(+)
     public :: operator(*)
     public :: operator(-)
+    public :: operator(/)
 
     type field
         integer :: placeholder
@@ -46,6 +47,10 @@ module field_mod
     interface operator(-)
         procedure negate
         procedure subtract_field
+    end interface
+    interface operator(/)
+        procedure divide_real
+        procedure divide_int
     end interface
 contains
     
@@ -110,5 +115,20 @@ contains
         type(field), intent(in) :: a, b
 
         c = a + (-b)
+    end function
+
+    function divide_int(a,b) result(c)
+        type(field) :: c
+        type(field), intent(in) :: a
+        integer, intent(in) :: b
+
+        c%placeholder = a%placeholder / b
+    end function
+    function divide_real(a,b) result(c)
+        type(field) :: c
+        type(field), intent(in) :: a
+        real, intent(in) :: b
+
+        c = a / int(b)
     end function
 end module
