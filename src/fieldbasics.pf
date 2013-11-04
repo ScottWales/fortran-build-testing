@@ -36,3 +36,13 @@ subroutine add()
 
     c = a + b
 end subroutine
+
+@test
+subroutine scale()
+    use field_mod
+    type(field) :: a, b
+
+    a = 1
+    b = a*(-1)
+    b = (-1)*a
+end subroutine

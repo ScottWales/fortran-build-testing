@@ -30,6 +30,12 @@ module field_mod
     interface operator(+)
         procedure add_field
     end interface
+    interface operator(*)
+        procedure scale_pre_real
+        procedure scale_post_real
+        procedure scale_pre_int
+        procedure scale_post_int
+    end interface
 contains
     
     subroutine assign_real(to, from)
@@ -50,5 +56,34 @@ contains
         type(field), intent(in) :: a, b
 
         c%placeholder = a%placeholder + b%placeholder
+    end function
+
+    function scale_post_real(a,b) result(c)
+        type(field) :: c
+        type(field), intent(in) :: a
+        real, intent(in) :: b
+
+        c%placeholder = a%placeholder * int(b)
+    end function
+    function scale_pre_real(a,b) result(c)
+        type(field) :: c
+        type(field), intent(in) :: b
+        real, intent(in) :: a
+
+        c = b * a
+    end function
+    function scale_post_int(a,b) result(c)
+        type(field) :: c
+        type(field), intent(in) :: a
+        integer, intent(in) :: b
+
+        c%placeholder = a%placeholder * b
+    end function
+    function scale_pre_int(a,b) result(c)
+        type(field) :: c
+        type(field), intent(in) :: b
+        integer, intent(in) :: a
+
+        c = b * a
     end function
 end module
