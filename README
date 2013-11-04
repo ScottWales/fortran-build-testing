@@ -1,0 +1,13 @@
+
+To build:
+=========
+
+    $ make
+
+Tests
+=====
+
+Tests use pFunit & require the PFUNIT environment variable to be set.
+Tests are run automatically when building the program.
+
+

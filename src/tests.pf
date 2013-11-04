@@ -1,0 +1,8 @@
+! A simple check to make sure unit tests are working
+
+@test
+subroutine checkTests()
+    use pfunit_mod
+
+    @assertTrue(.true.)
+end subroutine
