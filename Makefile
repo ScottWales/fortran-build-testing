@@ -3,12 +3,13 @@ all: check
 .PHONY:all clean check
 .SUFFIXES:
 
+# Tested with gfortran-4.8
 FC=mpif90
 LD=$(FC)
 
 FCFLAGS+=-fimplicit-none
 FCFLAGS+=-Wall -Wextra -Werror
-FCFLAGS+=-Iinclude -Imod -Jmod
+FCFLAGS+=-Iinclude -Jmod
 VPATH+=mod
 
 # Find pFunit files
