@@ -1,6 +1,6 @@
 !> \file    src/field.f90
 !! \author  Scott Wales <scott.wales@unimelb.edu.au>
-!! \brief   
+!! \brief   Interface types for scalar and vector fields
 !! 
 !! Copyright 2013 Scott Wales
 !! 
@@ -16,6 +16,20 @@
 !! See the License for the specific language governing permissions and
 !! limitations under the License.
 !! 
+!! =============================================================================
+!!
+!! This module provides two basic types for scalar and vector fields. The aim is
+!! to provide a clear boundary between the science and technical side - a
+!! scientist uses the interface provided here to program a model, while any
+!! optimisations and parallelisation are done by the implementor of the
+!! interface.
+!!
+!! The interfaces provide basic arithmetic for whole fields, e.g. + - * /, as
+!! well as operators to convert between the two types, e.g. grad() div().
+!! Additionally a pattern() type procedure is available to set the field values
+!! according to a custom function.
+!!
+!! =============================================================================
 
 module field_mod
     private
