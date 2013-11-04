@@ -1,15 +1,7 @@
 ! Basic stuff a field needs to do, just making sure types and overloads work
 
 @test
-subroutine construct()
-    use field_mod
-    type(field) :: a
-
-    a%placeholder = 0
-end subroutine
-
-@test
-subroutine set()
+subroutine set_constant()
     use field_mod
     type(scalarfield) :: a
 
@@ -20,11 +12,9 @@ end subroutine
 @test
 subroutine assign()
     use field_mod
-    type(field) :: a, b
     type(scalarfield) :: sa, sb
     type(vectorfield) :: va, vb
 
-    b = a
     sb = sa
     vb = va
 end subroutine

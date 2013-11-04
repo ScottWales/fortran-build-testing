@@ -19,7 +19,7 @@
 
 module field_mod
     private
-    public :: field, scalarfield, vectorfield
+    public :: scalarfield, vectorfield
     public :: assignment(=)
     public :: operator(+)
     public :: operator(*)

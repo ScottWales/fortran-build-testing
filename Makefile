@@ -27,7 +27,7 @@ TESTS=$(patsubst src/%.pf,test/%,$(TESTSRC))
 
 # Run tests
 check: $(TESTS)
-	@for test in $^; do echo $$test; ./$$test; done
+	@for test in $^; do echo "\n$$test"; ./$$test; done
 
 # Cleanup
 clean:
