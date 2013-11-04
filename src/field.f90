@@ -46,21 +46,30 @@ module field_mod
     end interface
 
     interface operator(+)
-        procedure add_field
+        procedure add_scalarfield
+        procedure add_vectorfield
     end interface
     interface operator(*)
-        procedure scale_pre_real
-        procedure scale_post_real
-        procedure scale_pre_int
-        procedure scale_post_int
+        procedure scale_pre_real_scalarfield
+        procedure scale_post_real_scalarfield
+        procedure scale_pre_int_scalarfield
+        procedure scale_post_int_scalarfield
+        procedure scale_pre_real_vectorfield
+        procedure scale_post_real_vectorfield
+        procedure scale_pre_int_vectorfield
+        procedure scale_post_int_vectorfield
     end interface
     interface operator(-)
-        procedure negate
-        procedure subtract_field
+        procedure negate_scalarfield
+        procedure negate_vectorfield
+        procedure subtract_scalarfield
+        procedure subtract_vectorfield
     end interface
     interface operator(/)
-        procedure divide_real
-        procedure divide_int
+        procedure divide_real_scalarfield
+        procedure divide_int_scalarfield
+        procedure divide_real_vectorfield
+        procedure divide_int_vectorfield
     end interface
 contains
     
@@ -89,66 +98,126 @@ contains
         to = pat(0.,0.,0.)
     end subroutine
 
-    function add_field(a, b) result(c)
-        type(field) :: c
-        type(field), intent(in) :: a, b
+    function add_scalarfield(a, b) result(c)
+        type(scalarfield) :: c
+        type(scalarfield), intent(in) :: a, b
+
+        c%placeholder = a%placeholder + b%placeholder
+    end function
+    function add_vectorfield(a, b) result(c)
+        type(vectorfield) :: c
+        type(vectorfield), intent(in) :: a, b
 
         c%placeholder = a%placeholder + b%placeholder
     end function
 
-    function scale_post_real(a,b) result(c)
-        type(field) :: c
-        type(field), intent(in) :: a
+    function scale_post_real_scalarfield(a,b) result(c)
+        type(scalarfield) :: c
+        type(scalarfield), intent(in) :: a
         real, intent(in) :: b
 
-        c%placeholder = a%placeholder * int(b)
+        c = a * int(b)
     end function
-    function scale_pre_real(a,b) result(c)
-        type(field) :: c
-        type(field), intent(in) :: b
+    function scale_pre_real_scalarfield(a,b) result(c)
+        type(scalarfield) :: c
+        type(scalarfield), intent(in) :: b
         real, intent(in) :: a
 
         c = b * a
     end function
-    function scale_post_int(a,b) result(c)
-        type(field) :: c
-        type(field), intent(in) :: a
+    function scale_post_int_scalarfield(a,b) result(c)
+        type(scalarfield) :: c
+        type(scalarfield), intent(in) :: a
         integer, intent(in) :: b
 
         c%placeholder = a%placeholder * b
     end function
-    function scale_pre_int(a,b) result(c)
-        type(field) :: c
-        type(field), intent(in) :: b
+    function scale_pre_int_scalarfield(a,b) result(c)
+        type(scalarfield) :: c
+        type(scalarfield), intent(in) :: b
+        integer, intent(in) :: a
+
+        c = b * a
+    end function
+    function scale_post_real_vectorfield(a,b) result(c)
+        type(vectorfield) :: c
+        type(vectorfield), intent(in) :: a
+        real, intent(in) :: b
+
+        c = a * int(b)
+    end function
+    function scale_pre_real_vectorfield(a,b) result(c)
+        type(vectorfield) :: c
+        type(vectorfield), intent(in) :: b
+        real, intent(in) :: a
+
+        c = b * a
+    end function
+    function scale_post_int_vectorfield(a,b) result(c)
+        type(vectorfield) :: c
+        type(vectorfield), intent(in) :: a
+        integer, intent(in) :: b
+
+        c%placeholder = a%placeholder * b
+    end function
+    function scale_pre_int_vectorfield(a,b) result(c)
+        type(vectorfield) :: c
+        type(vectorfield), intent(in) :: b
         integer, intent(in) :: a
 
         c = b * a
     end function
 
-    function negate(a) result(c)
-        type(field) :: c
-        type(field), intent(in) :: a
+    function negate_scalarfield(a) result(c)
+        type(scalarfield) :: c
+        type(scalarfield), intent(in) :: a
+
+        c = (-1) * a
+    end function
+    function negate_vectorfield(a) result(c)
+        type(vectorfield) :: c
+        type(vectorfield), intent(in) :: a
 
         c = (-1) * a
     end function
 
-    function subtract_field(a, b) result(c)
-        type(field) :: c
-        type(field), intent(in) :: a, b
+    function subtract_scalarfield(a, b) result(c)
+        type(scalarfield) :: c
+        type(scalarfield), intent(in) :: a, b
+
+        c = a + (-b)
+    end function
+    function subtract_vectorfield(a, b) result(c)
+        type(vectorfield) :: c
+        type(vectorfield), intent(in) :: a, b
 
         c = a + (-b)
     end function
 
-    function divide_int(a,b) result(c)
-        type(field) :: c
-        type(field), intent(in) :: a
+    function divide_int_scalarfield(a,b) result(c)
+        type(scalarfield) :: c
+        type(scalarfield), intent(in) :: a
         integer, intent(in) :: b
 
         c%placeholder = a%placeholder / b
     end function
-    function divide_real(a,b) result(c)
-        type(field) :: c
-        type(field), intent(in) :: a
+    function divide_real_scalarfield(a,b) result(c)
+        type(scalarfield) :: c
+        type(scalarfield), intent(in) :: a
+        real, intent(in) :: b
+
+        c = a / int(b)
+    end function
+    function divide_int_vectorfield(a,b) result(c)
+        type(vectorfield) :: c
+        type(vectorfield), intent(in) :: a
+        integer, intent(in) :: b
+
+        c%placeholder = a%placeholder / b
+    end function
+    function divide_real_vectorfield(a,b) result(c)
+        type(vectorfield) :: c
+        type(vectorfield), intent(in) :: a
         real, intent(in) :: b
 
         c = a / int(b)

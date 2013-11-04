@@ -21,42 +21,48 @@ end subroutine
 subroutine assign()
     use field_mod
     type(field) :: a, b
+    type(scalarfield) :: sa, sb
+    type(vectorfield) :: va, vb
 
     b = a
+    sb = sa
+    vb = va
 end subroutine
 
 @test
 subroutine add()
     use field_mod
-    type(field) :: a, b, c
+    type(scalarfield) :: sa, sb, sc
+    type(vectorfield) :: va, vb, vc
 
-    c = a + b
+    sc = sa + sb
+    vc = va + vb
+    sc = sa - sb
+    vc = va - vb
 end subroutine
 
 @test
 subroutine scale()
     use field_mod
-    type(field) :: a, b
+    type(scalarfield) :: sa, sb
+    type(vectorfield) :: va, vb
 
-    b = a*(-1)
-    b = (-1)*a
-    b = a / 2
+    sb = sa*(-1)
+    sb = (-1)*sa
+    sb = sa / 2
+    vb = va*(-1)
+    vb = (-1)*va
+    vb = va / 2
 end subroutine
 
 @test
 subroutine negate()
     use field_mod
-    type(field) :: a, b
+    type(scalarfield) :: sa, sb
+    type(vectorfield) :: va, vb
 
-    b = -a
-end subroutine
-
-@test
-subroutine subtract()
-    use field_mod
-    type(field) :: a, b, c
-
-    c = a - b
+    sb = -sa
+    vb = -va
 end subroutine
 
 function pat(u, v, w) result(z)
