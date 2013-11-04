@@ -1,0 +1,8 @@
+! Basic stuff a field needs to do
+
+@test
+subroutine construct()
+    use field_mod
+
+    type(field) :: a
+end subroutine
