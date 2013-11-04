@@ -68,3 +68,32 @@ subroutine subtract()
 
     c = a - b
 end subroutine
+
+function pat(u, v, w) result(z)
+    real, intent(in) :: u
+    real, intent(in) :: v
+    real, intent(in) :: w
+    real :: z
+
+    ! ignore unused arguments
+    z=u+v+w
+
+    z = 1
+end function
+
+@test
+subroutine assign_pattern()
+    use field_mod
+    interface
+        function pat(u, v, w) result(z)
+            real, intent(in) :: u
+            real, intent(in) :: v
+            real, intent(in) :: w
+            real :: z
+        end function 
+    end interface
+
+    type(field) :: a
+
+    call a%pattern(pat)
+end subroutine

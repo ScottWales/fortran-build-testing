@@ -28,6 +28,8 @@ module field_mod
 
     type field
         integer :: placeholder
+        contains
+            procedure :: pattern
     end type
 
     interface assignment(=)
@@ -65,6 +67,18 @@ contains
         integer, intent(in) :: from
 
         to%placeholder = from
+    end subroutine
+
+    subroutine pattern(to, pat)
+        class(field), intent(inout) :: to
+        interface 
+            function pat(u,v,w) result(z)
+                real, intent(in) :: u, v, w
+                real :: z
+            end function
+        end interface
+
+        to = pat(0.,0.,0.)
     end subroutine
 
     function add_field(a, b) result(c)
