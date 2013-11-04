@@ -19,17 +19,25 @@
 
 module field_mod
     private
-    public :: field
+    public :: field, scalarfield, vectorfield
     public :: assignment(=)
     public :: operator(+)
     public :: operator(*)
     public :: operator(-)
     public :: operator(/)
+    public :: grad
+    public :: div
 
     type field
         integer :: placeholder
         contains
             procedure :: pattern
+    end type
+
+    type, extends(field) :: scalarfield
+    end type
+
+    type, extends(field) :: vectorfield
     end type
 
     interface assignment(=)
@@ -144,5 +152,18 @@ contains
         real, intent(in) :: b
 
         c = a / int(b)
+    end function
+
+    function grad(s) result(v)
+        type(scalarfield), intent(in) :: s
+        type(vectorfield) :: v
+
+        v%placeholder = s%placeholder
+    end function
+    function div(v) result(s)
+        type(vectorfield), intent(in) :: v
+        type(scalarfield) :: s
+
+        s%placeholder = v%placeholder
     end function
 end module

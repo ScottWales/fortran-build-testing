@@ -97,3 +97,13 @@ subroutine assign_pattern()
 
     call a%pattern(pat)
 end subroutine
+
+@test
+subroutine vectorops()
+    use field_mod
+    type(scalarfield) :: s
+    type(vectorfield) :: v
+
+    v = grad(s)
+    s = div(v)
+end subroutine
