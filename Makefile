@@ -11,6 +11,7 @@ LD=$(FC)
 ifeq ($(findstring gcc,$(shell $(FC) -v 2>&1)),gcc)
     COMPILER_TYPE=gnu
     FCFLAGS+=-fimplicit-none
+    FCFLAGS+=-g -fbacktrace
     FCFLAGS+=-Wall -Wextra -Werror
     FCFLAGS+=-Iinclude -Jmod
 else ifeq ($(findstring ifort,$(shell $(FC) -v 2>&1)),ifort)

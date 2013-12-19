@@ -40,6 +40,7 @@ module field_mod
     public operator(/)
     public operator(+)
     public operator(-)
+    public operator(==)
     public grad
     public div
 
@@ -112,6 +113,9 @@ module field_mod
     end interface
     interface operator(/)
         procedure divide_elements_s_sf
+    end interface
+    interface operator(==)
+        procedure equal_sf
     end interface
 
     contains
@@ -186,5 +190,12 @@ module field_mod
             type(fieldop_grad) :: grad
 
             grad%dummy = sf%dummy
+        end function
+
+        function equal_sf(a,b) result(r)
+            class(fieldop_sf), intent(in) :: a, b
+            logical :: r
+
+            r = a%dummy == b%dummy
         end function
 end module

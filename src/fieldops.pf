@@ -68,7 +68,14 @@ end subroutine
 @test
 subroutine set()
     use field_mod
-    type(scalarfield) :: sf
+    use pfunit_mod
+    type(scalarfield) :: a, b, c
 
-    sf = 1.0
+    a = 1.0
+    b = a
+    @assertTrue(a == b)
+
+    c = -1.0
+    a = -b
+    @assertTrue(a == c)
 end subroutine
