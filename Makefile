@@ -13,8 +13,8 @@ FCFLAGS+=-Iinclude -Jmod
 VPATH+=mod
 
 # Find pFunit files
-FCFLAGS+=-I$(PFUNIT)/mod
-VPATH+=$(PFUNIT)/mod
+FCFLAGS+=-I$(PFUNIT)/mod $(PFUNIT)/source
+VPATH+=$(PFUNIT)/mod $(PFUNIT)/source
 
 PFPARSE=$(PFUNIT)/bin/pFUnitParser.py
 
