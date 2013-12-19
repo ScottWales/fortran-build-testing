@@ -63,6 +63,9 @@ module field_mod
     type fieldop_sf
         ! This would be abstracted via a mesh in a real model
         real, dimension(100,20,20) :: dummy
+        contains
+            ! This function evaluates the operation at a single point
+            procedure :: evaluate => evaluate_sf
     end type
 
     ! A base scalar field type
@@ -222,4 +225,12 @@ module field_mod
 
             r = maxval(abs(a%dummy - b%dummy)) < 0.01
         end function
+
+        function evaluate_sf(this) result(r)
+            class(fieldop_sf), intent(in) :: this
+            real :: r
+
+            r = this%dummy(1,1,1)
+        end function
+
 end module
