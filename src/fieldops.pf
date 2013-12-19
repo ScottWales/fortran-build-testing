@@ -26,7 +26,7 @@ subroutine convert()
     type(scalarfield) :: sf
     type(vectorfield) :: vf
 
-    vf = div(sf)
+    vf = grad(sf)
 end subroutine
 
 ! Chain operations
@@ -36,6 +36,30 @@ subroutine chain()
     type(scalarfield) :: sf
     type(vectorfield) :: vf
 
-    vf = div(1.0 * sf)
+    vf = grad(1.0 * sf)
 end subroutine
     
+! We have all kinds of basic operations
+@test
+subroutine basicops()
+    use field_mod
+    type(scalarfield) :: sf
+    type(vectorfield) :: vf
+
+    sf = -sf ! Negate
+    vf = -vf
+    sf = 1.0/sf ! Elementwise inverse
+    vf = sf * vf ! Scale vector field by scalar field
+    vf = vf + vf ! Add fields
+end subroutine
+
+
+! Eventually we can represent complex operations, written out in readable syntax
+@test
+subroutine wind()
+    use field_mod
+    type(scalarfield) :: rho, p
+    type(vectorfield) :: DuDt, G
+
+    DuDt = -1.0/rho * grad(p) + G
+end subroutine

@@ -37,8 +37,18 @@ module field_mod
     public vectorfield, fieldop_vf
     public assignment(=)
     public operator(*)
+    public operator(/)
+    public operator(+)
+    public operator(-)
+
     public fieldop_multiply_s_sf
+    public fieldop_multiply_sf_vf
+    public fieldop_add_vf_vf
+    public fieldop_divide_elements_s_sf
+    public fieldop_negate_sf
+    public fieldop_negate_vf
     public div, fieldop_div
+    public grad, fieldop_grad
 
     ! An operation that returns a scalar field
     type fieldop_sf
@@ -49,20 +59,31 @@ module field_mod
     type, extends(fieldop_sf) :: scalarfield
     end type
 
-    ! A vector field type
-    type vectorfield
-        integer :: dummy
-    end type
-
     ! An operation that returns a scalar field
     type fieldop_vf
         integer :: dummy
     end type
 
-    type, extends(fieldop_sf) :: fieldop_multiply_s_sf
+    ! A vector field type
+    type, extends(fieldop_vf) :: vectorfield
     end type
 
-    type, extends(fieldop_vf) :: fieldop_div
+    type, extends(fieldop_sf) :: fieldop_multiply_s_sf
+    end type
+    type, extends(fieldop_vf) :: fieldop_multiply_sf_vf
+    end type
+    type, extends(fieldop_vf) :: fieldop_add_vf_vf
+    end type
+    type, extends(fieldop_sf) :: fieldop_divide_elements_s_sf
+    end type
+    type, extends(fieldop_sf) :: fieldop_negate_sf
+    end type
+    type, extends(fieldop_vf) :: fieldop_negate_vf
+    end type
+
+    type, extends(fieldop_sf) :: fieldop_div
+    end type
+    type, extends(fieldop_vf) :: fieldop_grad
     end type
 
     interface assignment(=)
@@ -72,6 +93,17 @@ module field_mod
 
     interface operator(*)
         procedure multiply_s_sf
+        procedure multiply_sf_vf
+    end interface
+    interface operator(+)
+        procedure add_vf_vf
+    end interface
+    interface operator(-)
+        procedure negate_sf
+        procedure negate_vf
+    end interface
+    interface operator(/)
+        procedure divide_elements_s_sf
     end interface
 
     contains
@@ -95,11 +127,50 @@ module field_mod
 
             r%dummy = s * sf%dummy
         end function
+        function multiply_sf_vf(sf, vf) result(r)
+            class(fieldop_sf), intent(in) :: sf
+            class(fieldop_vf), intent(in) :: vf
+            type(fieldop_multiply_sf_vf) :: r
 
-        function div(sf)
-            class(fieldop_sf) :: sf
+            r%dummy = vf%dummy * sf%dummy
+        end function
+        function add_vf_vf(a,b) result(r)
+            class(fieldop_vf), intent(in) :: a
+            class(fieldop_vf), intent(in) :: b
+            type(fieldop_add_vf_vf) :: r
+
+            r%dummy = a%dummy * b%dummy
+        end function
+        function divide_elements_s_sf(s, sf) result(r)
+            real, intent(in) :: s
+            class(fieldop_sf), intent(in) :: sf
+            type(fieldop_divide_elements_s_sf) :: r
+
+            r%dummy = s / sf%dummy
+        end function
+        function negate_sf(sf) result(r)
+            class(fieldop_sf), intent(in) :: sf
+            type(fieldop_negate_sf) :: r
+
+            r%dummy = -sf%dummy
+        end function
+        function negate_vf(vf) result(r)
+            class(fieldop_vf), intent(in) :: vf
+            type(fieldop_negate_vf) :: r
+
+            r%dummy = -vf%dummy
+        end function
+
+        function div(vf)
+            class(fieldop_vf) :: vf
             type(fieldop_div) :: div
 
-            div%dummy = sf%dummy
+            div%dummy = vf%dummy
+        end function
+        function grad(sf)
+            class(fieldop_sf) :: sf
+            type(fieldop_grad) :: grad
+
+            grad%dummy = sf%dummy
         end function
 end module
