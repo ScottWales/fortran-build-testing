@@ -61,7 +61,8 @@ module field_mod
 
     ! An operation that returns a scalar field
     type fieldop_sf
-        integer :: dummy
+        ! This would be abstracted via a mesh in a real model
+        real, dimension(100,20,20) :: dummy
     end type
 
     ! A base scalar field type
@@ -70,7 +71,8 @@ module field_mod
 
     ! An operation that returns a scalar field
     type fieldop_vf
-        integer :: dummy
+        ! This would be abstracted via a mesh in a real model
+        real, dimension(100,20,20) :: dummy
     end type
 
     ! A vector field type
@@ -143,7 +145,7 @@ module field_mod
             real, intent(in) :: s
             type(scalarfield), intent(out) :: sf
 
-            sf%dummy = int(s)
+            sf%dummy = s
         end subroutine
 
         function multiply_s_sf(s, sf) result(r)
@@ -151,14 +153,14 @@ module field_mod
             class(fieldop_sf), intent(in) :: sf
             type(fieldop_multiply_s_sf) :: r
 
-            r%dummy = int(s) * sf%dummy
+            r%dummy = s * sf%dummy
         end function
         function multiply_s_vf(s, vf) result(r)
             real, intent(in) :: s
             class(fieldop_vf), intent(in) :: vf
             type(fieldop_multiply_s_vf) :: r
 
-            r%dummy = int(s) * vf%dummy
+            r%dummy = s * vf%dummy
         end function
         function multiply_sf_vf(sf, vf) result(r)
             class(fieldop_sf), intent(in) :: sf
@@ -186,7 +188,7 @@ module field_mod
             class(fieldop_sf), intent(in) :: sf
             type(fieldop_divide_elements_s_sf) :: r
 
-            r%dummy = int(s) / sf%dummy
+            r%dummy = s / sf%dummy
         end function
         function negate_sf(sf) result(r)
             class(fieldop_sf), intent(in) :: sf
@@ -218,6 +220,6 @@ module field_mod
             class(fieldop_sf), intent(in) :: a, b
             logical :: r
 
-            r = a%dummy == b%dummy
+            r = maxval(abs(a%dummy - b%dummy)) < 0.01
         end function
 end module
