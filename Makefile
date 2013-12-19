@@ -7,14 +7,24 @@ all: check
 FC=mpif90
 LD=$(FC)
 
-FCFLAGS+=-fimplicit-none
-FCFLAGS+=-Wall -Wextra -Werror
-FCFLAGS+=-Iinclude -Jmod
+# Compiler detection
+ifeq ($(findstring gcc,$(shell $(FC) -v 2>&1)),gcc)
+    COMPILER_TYPE=gnu
+    FCFLAGS+=-fimplicit-none
+    FCFLAGS+=-Wall -Wextra -Werror
+    FCFLAGS+=-Iinclude -Jmod
+else ifeq ($(findstring ifort,$(shell $(FC) -v 2>&1)),ifort)
+    COMPILER_TYPE=intel
+    FCFLAGS+=-g -traceback
+    FCFLAGS+=-warn all -warn errors -check all
+#    FCFLAGS+=-stand f03
+    FCFLAGS+=-Iinclude -module mod
+endif
 VPATH+=mod
 
 # Find pFunit files
-FCFLAGS+=-I$(PFUNIT)/mod $(PFUNIT)/source
-VPATH+=$(PFUNIT)/mod $(PFUNIT)/source
+FCFLAGS+=-I$(PFUNIT)/mod
+VPATH+=$(PFUNIT)/mod
 
 PFPARSE=$(PFUNIT)/bin/pFUnitParser.py
 
