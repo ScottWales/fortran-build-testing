@@ -32,22 +32,47 @@
 !! =============================================================================
 
 module field_mod
+    private
+    public scalarfield, fieldop_sf
+    public assignment(=)
+    public operator(*)
+    public fieldop_multiply_s_sf
+
+    ! A scalar field type
     type scalarfield
         integer :: dummy
     end type
 
+    ! An operation that returns a scalar field
     type fieldop_sf
         integer :: dummy
+    end type
+
+    type, extends(fieldop_sf) :: fieldop_multiply_s_sf
+
     end type
 
     interface assignment(=)
         procedure assign_sf
     end interface
+
+    interface operator(*)
+        procedure multiply_s_sf
+    end interface
+
     contains
         subroutine assign_sf(sf, op)
             type(scalarfield), intent(out) :: sf
-            type(fieldop_sf), intent(in) :: op
+            class(fieldop_sf), intent(in) :: op
 
             sf%dummy = op%dummy
         end subroutine
+
+        function multiply_s_sf(s, sf) result(r)
+            real, intent(in) :: s
+            type(scalarfield), intent(in) :: sf
+            type(fieldop_multiply_s_sf) :: r
+
+            r%dummy = s * sf%dummy
+        end function
 end module

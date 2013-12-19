@@ -1,5 +1,6 @@
 ! Field operations
 
+! An operation gets evaluated when it's assigned to a plain field
 @test
 subroutine assign()
     use field_mod
@@ -8,4 +9,14 @@ subroutine assign()
     type(fieldop_sf)  :: op
 
     sf = op
+end subroutine
+
+! Performing operations on a field creates a statement tree
+@test
+subroutine operations()
+    use field_mod
+
+    type(scalarfield) :: sf
+
+    sf = 1.0 * sf
 end subroutine
