@@ -132,7 +132,7 @@ module field_mod
             class(fieldop_sf), intent(in) :: sf
             type(fieldop_multiply_s_sf) :: r
 
-            r%dummy = s * sf%dummy
+            r%dummy = int(s) * sf%dummy
         end function
         function multiply_sf_vf(sf, vf) result(r)
             class(fieldop_sf), intent(in) :: sf
@@ -153,7 +153,7 @@ module field_mod
             class(fieldop_sf), intent(in) :: sf
             type(fieldop_divide_elements_s_sf) :: r
 
-            r%dummy = s / sf%dummy
+            r%dummy = int(s) / sf%dummy
         end function
         function negate_sf(sf) result(r)
             class(fieldop_sf), intent(in) :: sf
