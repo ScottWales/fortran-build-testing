@@ -1,16 +1,7 @@
 ! Field operations
 
-! An operation gets evaluated when it's assigned to a plain field
-@test
-subroutine assign()
-    use field_mod
-    type(scalarfield) :: sf
-    type(fieldop_sf)  :: op
-
-    sf = op
-end subroutine
-
-! Performing operations on a field creates a statement tree
+! Performing operations on a field creates a statement tree of fieldops
+! A fieldop gets evaluated when it's assigned to a plain field
 @test
 subroutine operations()
     use field_mod
@@ -19,7 +10,8 @@ subroutine operations()
     sf = 1.0 * sf
 end subroutine
 
-! Convert between scalar and vector fields
+! Convert between scalar and vector fields - trying to assign them directly is a
+! syntax error
 @test
 subroutine convert()
     use field_mod
@@ -29,7 +21,8 @@ subroutine convert()
     vf = grad(sf)
 end subroutine
 
-! Chain operations
+! Chain operations to create bigger statements - optimisation happens in the
+! background so users only care about whole fields, not loops and halos
 @test
 subroutine chain()
     use field_mod
@@ -46,27 +39,43 @@ subroutine basicops()
     type(scalarfield) :: sf
     type(vectorfield) :: vf
 
-    sf = -sf ! Negate
+    sf = -sf     ! Negate
     vf = -vf
-    sf = 1.0/sf ! Elementwise inverse
+    sf = 1.0/sf  ! Elementwise inverse
     vf = sf * vf ! Scale vector field by scalar field
     vf = vf + vf ! Add fields
 end subroutine
 
 
-! Eventually we can represent complex operations, written out in readable syntax
+! These add up to represent complex operations, written out in readable syntax
 @test
 subroutine wind()
     use field_mod
     type(scalarfield) :: rho, p
-    type(vectorfield) :: DuDt, G
+    type(vectorfield) :: DuDt, G, u
+    real :: dt
 
     DuDt = -1.0/rho * grad(p) + G
+    u = u + dt * DuDt
 end subroutine
 
-! Now let's make the internals work
+! Some tests to make sure that the internals work
+! Operations are evaluated lazily to increase cache hits - instead of
+!     do i
+!        a(i) = b(i) + c(i)
+!     end
+!     do i
+!        d(i) = 2 * a(i)
+!     end
+! loops will get automatically merged:
+!     do i
+!        d(i) = 2 * (b(i) + c(i))
+!     end do
+! Unfortunately we can't get all the benefits of C++'s expression templates
+! since these operations can't be inlined, but it should allow a decent amount
+! of expressiveness.
 @test
-subroutine set()
+subroutine basic_internals()
     use field_mod
     use pfunit_mod
     type(scalarfield) :: a, b, c
@@ -75,7 +84,20 @@ subroutine set()
     b = a
     @assertTrue(a == b)
 
-    c = -1.0
     a = -b
+    c = -1.0
     @assertTrue(a == c)
+
+    a = 2.0 * b
+    c = 2.0
+    @assertTrue(a == c)
+
+    a = b + b
+    c = 2.0 * b
+    @assertTrue(a == c)
+
+    a = 2.0
+    b = 1.0/a
+    c = 0.5
+    @assertTrue(b == c)
 end subroutine

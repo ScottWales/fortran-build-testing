@@ -49,8 +49,10 @@ module field_mod
     public fieldop_sf
     public fieldop_vf
     public fieldop_multiply_s_sf
+    public fieldop_multiply_s_vf
     public fieldop_multiply_sf_vf
     public fieldop_add_vf_vf
+    public fieldop_add_sf_sf
     public fieldop_divide_elements_s_sf
     public fieldop_negate_sf
     public fieldop_negate_vf
@@ -76,12 +78,16 @@ module field_mod
     end type
 
 
-    ! Types for various operations
+    ! Types for various operations - they are classified by their return type
     type, extends(fieldop_sf) :: fieldop_multiply_s_sf
+    end type
+    type, extends(fieldop_vf) :: fieldop_multiply_s_vf
     end type
     type, extends(fieldop_vf) :: fieldop_multiply_sf_vf
     end type
     type, extends(fieldop_vf) :: fieldop_add_vf_vf
+    end type
+    type, extends(fieldop_sf) :: fieldop_add_sf_sf
     end type
     type, extends(fieldop_sf) :: fieldop_divide_elements_s_sf
     end type
@@ -102,10 +108,12 @@ module field_mod
     end interface
     interface operator(*)
         procedure multiply_s_sf
+        procedure multiply_s_vf
         procedure multiply_sf_vf
     end interface
     interface operator(+)
         procedure add_vf_vf
+        procedure add_sf_sf
     end interface
     interface operator(-)
         procedure negate_sf
@@ -145,6 +153,13 @@ module field_mod
 
             r%dummy = int(s) * sf%dummy
         end function
+        function multiply_s_vf(s, vf) result(r)
+            real, intent(in) :: s
+            class(fieldop_vf), intent(in) :: vf
+            type(fieldop_multiply_s_vf) :: r
+
+            r%dummy = int(s) * vf%dummy
+        end function
         function multiply_sf_vf(sf, vf) result(r)
             class(fieldop_sf), intent(in) :: sf
             class(fieldop_vf), intent(in) :: vf
@@ -158,6 +173,13 @@ module field_mod
             type(fieldop_add_vf_vf) :: r
 
             r%dummy = a%dummy * b%dummy
+        end function
+        function add_sf_sf(a,b) result(r)
+            class(fieldop_sf), intent(in) :: a
+            class(fieldop_sf), intent(in) :: b
+            type(fieldop_add_sf_sf) :: r
+
+            r%dummy = a%dummy + b%dummy
         end function
         function divide_elements_s_sf(s, sf) result(r)
             real, intent(in) :: s
