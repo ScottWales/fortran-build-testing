@@ -33,22 +33,28 @@
 
 module field_mod
     private
-    public scalarfield, fieldop_sf
-    public vectorfield, fieldop_vf
+    public scalarfield
+    public vectorfield
     public assignment(=)
     public operator(*)
     public operator(/)
     public operator(+)
     public operator(-)
+    public grad
+    public div
 
+    ! Types for implementing operation chaining and lazy evaluation
+    ! These should not be instantiated directly
+    public fieldop_sf
+    public fieldop_vf
     public fieldop_multiply_s_sf
     public fieldop_multiply_sf_vf
     public fieldop_add_vf_vf
     public fieldop_divide_elements_s_sf
     public fieldop_negate_sf
     public fieldop_negate_vf
-    public div, fieldop_div
-    public grad, fieldop_grad
+    public fieldop_div
+    public fieldop_grad
 
     ! An operation that returns a scalar field
     type fieldop_sf
@@ -68,6 +74,8 @@ module field_mod
     type, extends(fieldop_vf) :: vectorfield
     end type
 
+
+    ! Types for various operations
     type, extends(fieldop_sf) :: fieldop_multiply_s_sf
     end type
     type, extends(fieldop_vf) :: fieldop_multiply_sf_vf
@@ -80,17 +88,16 @@ module field_mod
     end type
     type, extends(fieldop_vf) :: fieldop_negate_vf
     end type
-
     type, extends(fieldop_sf) :: fieldop_div
     end type
     type, extends(fieldop_vf) :: fieldop_grad
     end type
 
+    ! Operator overloads
     interface assignment(=)
         procedure assign_sf
         procedure assign_vf
     end interface
-
     interface operator(*)
         procedure multiply_s_sf
         procedure multiply_sf_vf
