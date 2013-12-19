@@ -63,3 +63,12 @@ subroutine wind()
 
     DuDt = -1.0/rho * grad(p) + G
 end subroutine
+
+! Now let's make the internals work
+@test
+subroutine set()
+    use field_mod
+    type(scalarfield) :: sf
+
+    sf = 1.0
+end subroutine

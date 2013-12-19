@@ -97,6 +97,7 @@ module field_mod
     interface assignment(=)
         procedure assign_sf
         procedure assign_vf
+        procedure set_sf
     end interface
     interface operator(*)
         procedure multiply_s_sf
@@ -125,6 +126,12 @@ module field_mod
             type(vectorfield), intent(out) :: vf
 
             vf%dummy = op%dummy
+        end subroutine
+        subroutine set_sf(sf, s)
+            real, intent(in) :: s
+            type(scalarfield), intent(out) :: sf
+
+            sf%dummy = int(s)
         end subroutine
 
         function multiply_s_sf(s, sf) result(r)
