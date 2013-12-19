@@ -34,9 +34,11 @@
 module field_mod
     private
     public scalarfield, fieldop_sf
+    public vectorfield, fieldop_vf
     public assignment(=)
     public operator(*)
     public fieldop_multiply_s_sf
+    public div, fieldop_div
 
     ! A scalar field type
     type scalarfield
@@ -48,12 +50,25 @@ module field_mod
         integer :: dummy
     end type
 
-    type, extends(fieldop_sf) :: fieldop_multiply_s_sf
+    ! A vector field type
+    type vectorfield
+        integer :: dummy
+    end type
 
+    ! An operation that returns a scalar field
+    type fieldop_vf
+        integer :: dummy
+    end type
+
+    type, extends(fieldop_sf) :: fieldop_multiply_s_sf
+    end type
+
+    type, extends(fieldop_vf) :: fieldop_div
     end type
 
     interface assignment(=)
         procedure assign_sf
+        procedure assign_vf
     end interface
 
     interface operator(*)
@@ -67,6 +82,12 @@ module field_mod
 
             sf%dummy = op%dummy
         end subroutine
+        subroutine assign_vf(vf, op)
+            type(vectorfield), intent(out) :: vf
+            class(fieldop_vf), intent(in) :: op
+
+            vf%dummy = op%dummy
+        end subroutine
 
         function multiply_s_sf(s, sf) result(r)
             real, intent(in) :: s
@@ -74,5 +95,12 @@ module field_mod
             type(fieldop_multiply_s_sf) :: r
 
             r%dummy = s * sf%dummy
+        end function
+
+        function div(sf)
+            type(scalarfield) :: sf
+            type(fieldop_div) :: div
+
+            div%dummy = sf%dummy
         end function
 end module

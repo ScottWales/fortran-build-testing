@@ -4,7 +4,6 @@
 @test
 subroutine assign()
     use field_mod
-
     type(scalarfield) :: sf
     type(fieldop_sf)  :: op
 
@@ -15,8 +14,17 @@ end subroutine
 @test
 subroutine operations()
     use field_mod
-
     type(scalarfield) :: sf
 
     sf = 1.0 * sf
+end subroutine
+
+! Convert between scalar and vector fields
+@test
+subroutine convert()
+    use field_mod
+    type(scalarfield) :: sf
+    type(vectorfield) :: vf
+
+    vf = div(sf)
 end subroutine
