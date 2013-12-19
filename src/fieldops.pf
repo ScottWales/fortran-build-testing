@@ -28,3 +28,14 @@ subroutine convert()
 
     vf = div(sf)
 end subroutine
+
+! Chain operations
+@test
+subroutine chain()
+    use field_mod
+    type(scalarfield) :: sf
+    type(vectorfield) :: vf
+
+    vf = div(1.0 * sf)
+end subroutine
+    
