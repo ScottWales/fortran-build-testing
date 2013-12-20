@@ -20,6 +20,7 @@ else ifeq ($(findstring ifort,$(shell $(FC) -v 2>&1)),ifort)
     FCFLAGS+=-warn all -warn errors -check all
 #    FCFLAGS+=-stand f03
     FCFLAGS+=-Iinclude -module mod
+    FCFLAGS+=-openmp
 endif
 VPATH+=mod
 

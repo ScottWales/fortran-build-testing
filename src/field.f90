@@ -139,8 +139,20 @@ module field_mod
             class(fieldop_sf), intent(in) :: op
             type(scalarfield), intent(out) :: sf
 
-            sf%dummy = op%dummy
+            integer :: i, j
+
+            ! Parallelisation, loop unrolling etc. happens here
+            !$omp parallel do
+            do i=1,20
+                do j=1,20
+                    ! Evaluating here ensures we load all the data for a grid
+                    ! point at once, we're not loading an area multiple times
+                    ! in different loops
+                    sf%dummy(:,j,i) = op%evaluate(j,i)
+                end do
+            end do
         end subroutine
+
         subroutine assign_vf(vf, op)
             class(fieldop_vf), intent(in) :: op
             type(vectorfield), intent(out) :: vf
@@ -229,15 +241,19 @@ module field_mod
             r = maxval(abs(a%dummy - b%dummy)) < 0.01
         end function
 
-        function evaluate_sf(this) result(r)
+        pure function evaluate_sf(this,j,i) result(r)
             class(scalarfield), intent(in) :: this
-            real :: r
-            r = this%dummy(1,1,1)
+            integer, intent(in) :: j, i
+            real, dimension(100) :: r
+            r = this%dummy(:,j,i)
         end function
-        function evaluate_sfop(this) result(r)
+
+        ! Default operation
+        pure function evaluate_sfop(this,j,i) result(r)
             class(fieldop_sf), intent(in) :: this
-            real :: r
-            r = this%dummy(1,1,1)
+            integer, intent(in) :: j, i
+            real, dimension(100) :: r
+            r = this%dummy(:,j,i)
         end function
 
 end module
