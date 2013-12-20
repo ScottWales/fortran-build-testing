@@ -65,11 +65,14 @@ module field_mod
         real, dimension(100,20,20) :: dummy
         contains
             ! This function evaluates the operation at a single point
-            procedure :: evaluate => evaluate_sf
+            procedure :: evaluate => evaluate_sfop
     end type
 
     ! A base scalar field type
     type, extends(fieldop_sf) :: scalarfield
+        contains
+            ! Return the actual value of the field
+            procedure :: evaluate => evaluate_sf
     end type
 
     ! An operation that returns a scalar field
@@ -227,9 +230,13 @@ module field_mod
         end function
 
         function evaluate_sf(this) result(r)
+            class(scalarfield), intent(in) :: this
+            real :: r
+            r = this%dummy(1,1,1)
+        end function
+        function evaluate_sfop(this) result(r)
             class(fieldop_sf), intent(in) :: this
             real :: r
-
             r = this%dummy(1,1,1)
         end function
 

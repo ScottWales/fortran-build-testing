@@ -41,7 +41,7 @@ for line in infile:
 
 dependencies = uses - modules
 
-obj = re.sub(r'src/(\S+).f90',r'obj/\1.o',infile.name)
+obj = re.sub(r'[^/]+/(\S+).[fF]90',r'obj/\1.o',infile.name)
 outfile.write(obj + ':' + ' '.join(dependencies) + '\n')
 if modules:
     outfile.write(' '.join(modules) + ':' + obj + '\n')

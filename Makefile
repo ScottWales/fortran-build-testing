@@ -71,7 +71,7 @@ bin/%: obj/%.o $$(OBJREQ_%.o)
 
 # Link tests with driver
 $(TESTS):$(PFUNIT)/include/driver.F90
-test/%: obj/%.o $$(OBJREQ_obj/%.F90)
+test/%: obj/%.o $$(OBJREQ_obj/%.o)
 	@mkdir -p $(dir $@)
 	$(FC) $(FCFLAGS) $(LDFLAGS) -L$(PFUNIT)/lib -DUSE_MPI -DSUITE=$*_suite -Wno-unused-parameter -o $@ $^ $(LDLIBS) -lpfunit
 
