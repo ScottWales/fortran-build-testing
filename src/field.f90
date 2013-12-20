@@ -87,6 +87,15 @@ module field_mod
 
 
     ! Types for various operations - they are classified by their return type
+    type, extends(fieldop_sf) :: fieldop_divide_elements_s_sf
+        ! Arguments to the operation
+        real :: a
+        class (fieldop_sf), pointer :: b
+        contains
+            ! Evaluate the opearation at a point
+            procedure :: evaluate => evaluate_divide_elements_s_sf
+    end type
+
     type, extends(fieldop_sf) :: fieldop_multiply_s_sf
     end type
     type, extends(fieldop_vf) :: fieldop_multiply_s_vf
@@ -96,8 +105,6 @@ module field_mod
     type, extends(fieldop_vf) :: fieldop_add_vf_vf
     end type
     type, extends(fieldop_sf) :: fieldop_add_sf_sf
-    end type
-    type, extends(fieldop_sf) :: fieldop_divide_elements_s_sf
     end type
     type, extends(fieldop_sf) :: fieldop_negate_sf
     end type
@@ -135,13 +142,13 @@ module field_mod
     end interface
 
     contains
+        ! Parallelisation, loop unrolling etc. happens here
         subroutine assign_sf(sf, op)
             class(fieldop_sf), intent(in) :: op
             type(scalarfield), intent(out) :: sf
 
             integer :: i, j
 
-            ! Parallelisation, loop unrolling etc. happens here
             !$omp parallel do
             do i=1,20
                 do j=1,20
@@ -152,6 +159,39 @@ module field_mod
                 end do
             end do
         end subroutine
+
+        pure function evaluate_sf(this,j,i) result(r)
+            class(scalarfield), intent(in) :: this
+            integer, intent(in) :: j, i
+            real, dimension(100) :: r
+            ! A scalarfield holds actual values, just return them
+            ! We're doing things by column in this example, but this could be
+            ! flexible - e.g. block the column to take advantage of SSE
+            r = this%dummy(:,j,i)
+        end function
+
+        ! Example function
+        ! Here we're getting the inverse of a field multiplied by a real
+        ! Looks like `a = 1.0/b`
+        function divide_elements_s_sf(s, sf) result(r)
+            real, intent(in) :: s
+            class(fieldop_sf), intent(in), target :: sf
+            type(fieldop_divide_elements_s_sf) :: r
+
+            ! Set the arguments in the fieldop, no computation is done here.
+            ! We're just creating the expression tree at this point
+            r%a = s
+            r%b => sf
+        end function
+        pure function evaluate_divide_elements_s_sf(this,j,i) result(r)
+            class(fieldop_divide_elements_s_sf), intent(in) :: this
+            integer, intent(in) :: j, i
+            real, dimension(100) :: r
+
+            ! Here one of the arguments is a fieldop, so it needs to be
+            ! evaluated before we can return
+            r = this%a / this%b%evaluate(j,i)
+        end function
 
         subroutine assign_vf(vf, op)
             class(fieldop_vf), intent(in) :: op
@@ -201,13 +241,6 @@ module field_mod
 
             r%dummy = a%dummy + b%dummy
         end function
-        function divide_elements_s_sf(s, sf) result(r)
-            real, intent(in) :: s
-            class(fieldop_sf), intent(in) :: sf
-            type(fieldop_divide_elements_s_sf) :: r
-
-            r%dummy = s / sf%dummy
-        end function
         function negate_sf(sf) result(r)
             class(fieldop_sf), intent(in) :: sf
             type(fieldop_negate_sf) :: r
@@ -234,21 +267,15 @@ module field_mod
             grad%dummy = sf%dummy
         end function
 
+        ! This is mainly for testing
         function equal_sf(a,b) result(r)
-            class(fieldop_sf), intent(in) :: a, b
+            class(scalarfield), intent(in) :: a, b
             logical :: r
 
             r = maxval(abs(a%dummy - b%dummy)) < 0.01
         end function
 
-        pure function evaluate_sf(this,j,i) result(r)
-            class(scalarfield), intent(in) :: this
-            integer, intent(in) :: j, i
-            real, dimension(100) :: r
-            r = this%dummy(:,j,i)
-        end function
-
-        ! Default operation
+        ! Default operation, would be abstract in a full implementation
         pure function evaluate_sfop(this,j,i) result(r)
             class(fieldop_sf), intent(in) :: this
             integer, intent(in) :: j, i
