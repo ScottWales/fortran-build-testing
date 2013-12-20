@@ -15,6 +15,17 @@ type(vectorfield) :: DuDt, G
 DuDt = 1.0/rho * grad(p) + G
 ```
 
+while behind the scenes this gets parallelised & loop unrolled
+
+```
+!$omp parallel do
+do i=1,nx
+   do j=1,ny
+      DuDt(:,j,i) = 1.0/rho(:,j,i) * ((p(:,j-1,i) - p(:,j+1,i))/dx ...
+   end do
+end do
+```
+
 See src/fieldops.pf for some more examples, and src/field.f90 for a partial
 implementation of the idea.
 
