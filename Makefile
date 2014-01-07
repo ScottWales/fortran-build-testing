@@ -32,8 +32,8 @@ VPATH   += $(PFUNIT)/mod
 PFPARSE =  $(PFUNIT)/bin/pFUnitParser.py
 
 # Get source files
-SRC     = $(shell find src -name '*.f90' -type f)
-TESTSRC = $(shell find src -name '*.pf' -type f)
+SRC     := $(shell find src -name '*.f90' -type f)
+TESTSRC := $(shell find src -name '*.pf' -type f)
 
 # Get list of tests to run
 TESTS   = $(patsubst src/%.pf,test/%,$(TESTSRC))
