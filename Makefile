@@ -21,6 +21,7 @@ else ifeq ($(findstring ifort,$(shell $(FC) -v 2>&1)),ifort)
 #    FCFLAGS+=-stand f03
     FCFLAGS+=-Iinclude -module mod
     FCFLAGS+=-openmp
+    LDFLAGS+=-openmp
 endif
 VPATH+=mod
 
@@ -87,3 +88,5 @@ deps/%.d: %.F90
 DEPS=$(patsubst %.f90,deps/%.d,$(SRC))
 DEPS+=$(patsubst src/%.pf,deps/obj/%.d,$(TESTSRC))
 -include $(DEPS)
+
+all: $(PROGRAMS)

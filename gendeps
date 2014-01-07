@@ -15,16 +15,18 @@ parser.add_argument('INPUT', help='Input Fortran file',
 
 args = parser.parse_args()
 
-infile = args.INPUT
+infile  = args.INPUT
 outfile = args.output
 
 # Regexs to find module references in the code
-moduleDef = re.compile('module\s*(\S+)',re.IGNORECASE)
-useDef = re.compile('use\s*(\S+)',re.IGNORECASE)
+moduleDef  = re.compile('module\s*(\S+)',re.IGNORECASE)
+useDef     = re.compile('use\s*(\S+)',re.IGNORECASE)
+programDef = re.compile('program\s*(\S+)',re.IGNORECASE)
 
 # Start with empty lists
-modules = set()
-uses = set()
+modules   = set()
+uses      = set()
+isProgram = False
 
 # Read the file
 for line in infile:
@@ -39,9 +41,16 @@ for line in infile:
     if match:
         uses.add(match.group(1).lower()+'.mod')
 
+    # Check if the file contains a program
+    match = programDef.match(stripped)
+    if match:
+        isProgram = True
+
 dependencies = uses - modules
 
-obj = re.sub(r'[^/]+/(\S+).[fF]90',r'obj/\1.o',infile.name)
+basename = re.sub(r'[^/]+/(\S+).[fF]90',r'\1',infile.name)
+obj      = 'obj/' + basename + '.o'
+
 outfile.write(obj + ':' + ' '.join(dependencies) + '\n')
 if modules:
     outfile.write(' '.join(modules) + ':' + obj + '\n')
@@ -49,6 +58,10 @@ outfile.write('OBJREQ_' + obj + '=' +
               ' '.join('$(MODPROV_%s)'%mod for mod in dependencies)+'\n')
 for mod in modules:
     outfile.write('MODPROV_'+mod+'='+obj+' '+'$(OBJREQ_'+obj+')\n')
+
+# Add to the list of programs
+if isProgram:
+    outfile.write('PROGRAMS += bin/' + basename + '\n')
 
 infile.close()
 outfile.close()
