@@ -23,7 +23,7 @@ PROGRAMs and tests run:
 Tests
 =====
 
-Tests use pFunit & require the PFUNIT environment variable to be set.
+Tests use [pFunit](http://sourceforge.net/projects/pfunit) & require the PFUNIT environment variable to be set.
 Tests are run automatically when building the program, or run
 
     $ make check
