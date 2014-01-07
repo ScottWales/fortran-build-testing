@@ -2,6 +2,7 @@
 
 @test
 subroutine checkTests()
+    use pfunit_mod
     use mod_a
 
     @assertTrue(.true.)
