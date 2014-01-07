@@ -3,7 +3,7 @@ all: check
 .PHONY:all clean check
 .SUFFIXES:
 
-# Tested with gfortran-4.8
+# Tested with gfortran-4.8 and ifort
 FC=mpif90
 LD=$(FC)
 
@@ -18,27 +18,27 @@ else ifeq ($(findstring ifort,$(shell $(FC) -v 2>&1)),ifort)
     COMPILER_TYPE=intel
     FCFLAGS+=-g -traceback
     FCFLAGS+=-warn all -warn errors -check all
-#    FCFLAGS+=-stand f03
     FCFLAGS+=-Iinclude -module mod
     FCFLAGS+=-openmp
     LDFLAGS+=-openmp
 endif
-VPATH+=mod
+
+# .mod files are stored in this directory
+VPATH   += mod
 
 # Find pFunit files
-FCFLAGS+=-I$(PFUNIT)/mod
-VPATH+=$(PFUNIT)/mod
-
-PFPARSE=$(PFUNIT)/bin/pFUnitParser.py
+FCFLAGS += -I$(PFUNIT)/mod
+VPATH   += $(PFUNIT)/mod
+PFPARSE =  $(PFUNIT)/bin/pFUnitParser.py
 
 # Get source files
-SRC=$(shell find src -name '*.f90' -type f)
-TESTSRC=$(shell find src -name '*.pf' -type f)
+SRC     = $(shell find src -name '*.f90' -type f)
+TESTSRC = $(shell find src -name '*.pf' -type f)
 
 # Get list of tests to run
-TESTS=$(patsubst src/%.pf,test/%,$(TESTSRC))
+TESTS   = $(patsubst src/%.pf,test/%,$(TESTSRC))
 
-# Run tests
+# Run all tests
 check: $(TESTS)
 	@for test in $^; do echo "\n$$test"; ./$$test; done
 
@@ -85,8 +85,9 @@ deps/%.d: %.F90
 	@mkdir -p $(dir $@)
 	./gendeps -o $@ $<
 
-DEPS=$(patsubst %.f90,deps/%.d,$(SRC))
-DEPS+=$(patsubst src/%.pf,deps/obj/%.d,$(TESTSRC))
+DEPS += $(patsubst %.f90,deps/%.d,$(SRC))
+DEPS += $(patsubst src/%.pf,deps/obj/%.d,$(TESTSRC))
 -include $(DEPS)
 
+# Compile programs found by the dependency generation
 all: $(PROGRAMS)
