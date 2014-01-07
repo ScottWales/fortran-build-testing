@@ -65,14 +65,25 @@ for line in infile:
 
 dependencies = uses - modules
 
+# What object file will this create?
 basename = re.sub(r'[^/]+/(\S+).[fF]90',r'\1',infile.name)
 obj      = 'obj/' + basename + '.o'
 
+# Create a list of dependencies for the object file
 outfile.write(obj + ':' + ' '.join(dependencies) + '\n')
+
+# Create a list of dependencies for the .mod file
 if modules:
     outfile.write(' '.join(modules) + ':' + obj + '\n')
+
+# Create a variable listing all the modules this file depends on - when
+# expanded this will turn into all of the objects required to make use of this
+# file
 outfile.write('OBJREQ_' + obj + '=' + 
               ' '.join('$(MODPROV_%s)'%mod for mod in dependencies)+'\n')
+
+# Create a variable for each module in the file listing all the objects the
+# module depends on
 for mod in modules:
     outfile.write('MODPROV_'+mod+'='+obj+' '+'$(OBJREQ_'+obj+')\n')
 
