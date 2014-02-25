@@ -5,6 +5,7 @@ compiler: gcc
 env:
     global:
         - FC=gfortran-4.8
+        - OMPI_FC=$(FC)
 install:
     - sudo apt-add-repository --yes ppa:ubuntu-toolchain-r/test
     - sudo apt-get update
