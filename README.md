@@ -38,3 +38,5 @@ Tests use [pFunit](http://sourceforge.net/projects/pfunit) & require the PFUNIT 
 Tests are run automatically when building the program, or run
 
     $ make check
+
+Note that you should use the `pfunit_2.1.0` branch, and it will require gfortran 4.8 or later (see http://sourceforge.net/p/pfunit/mailman/message/31811969/)
