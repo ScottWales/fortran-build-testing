@@ -29,21 +29,31 @@ LD=$(FC)
 # Compiler detection
 ifeq ($(findstring gcc,$(shell $(FC) -v 2>&1)),gcc)
     COMPILER_TYPE=gnu
+
     FCFLAGS+=-fimplicit-none
     FCFLAGS+=-g -fbacktrace
     FCFLAGS+=-Wall -Wextra -Werror
     FCFLAGS+=-Iinclude -Jmod
+    FCFLAGS+=-fopenmp
+
+    LDFLAGS+=-fopenmp
+
     TESTFCFLAGS+=-Wno-unused
     TESTFCFLAGS+=-Wno-uninitialized
     TESTFCFLAGS+=-Wno-unused-parameter
+
 else ifeq ($(findstring ifort,$(shell $(FC) -v 2>&1)),ifort)
     COMPILER_TYPE=intel
+
     FCFLAGS+=-g -traceback
     FCFLAGS+=-warn all -warn errors -check all
     FCFLAGS+=-Iinclude -module mod
     FCFLAGS+=-openmp
+
     LDFLAGS+=-openmp
+
     TESTFCFLAGS+=-Wno-unused-parameter
+
 endif
 
 # .mod files are stored in this directory
