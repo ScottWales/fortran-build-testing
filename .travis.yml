@@ -3,8 +3,8 @@
 language: c
 compiler: gcc
 install:
-    - apt-get install gfortran 
-    - apt-get install openmpi
+    - sudo apt-get install gfortran 
+    - sudo apt-get install openmpi
     - git clone git://git.code.sf.net/p/pfunit/code pfunit-code
     - make install -C pfunit-code MPI=yes OPENMP=yes INSTALL_DIR=pfunit
 script: make check PFUNIT=pfunit
