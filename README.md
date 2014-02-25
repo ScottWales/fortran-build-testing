@@ -22,6 +22,15 @@ PROGRAMs and tests run:
 
     $ make
 
+Note that pFunit requires some Fortran 2003 features not available in older
+versions of gfortran. Testing is done using gfortran-4.8, to install on Ubuntu:
+
+    $ sudo apt-add-repository ppa:ubuntu-toolchain-r/test
+    $ sudo apt-get update
+    $ sudo apt-get install gfortran-4.8
+    $ export FC=gfortran-4.8
+    $ export OMPI_FC=$FC
+
 Tests
 =====
 
