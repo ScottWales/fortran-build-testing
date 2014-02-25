@@ -33,6 +33,8 @@ ifeq ($(findstring gcc,$(shell $(FC) -v 2>&1)),gcc)
     FCFLAGS+=-g -fbacktrace
     FCFLAGS+=-Wall -Wextra -Werror
     FCFLAGS+=-Iinclude -Jmod
+    TESTFCFLAGS+=-Wno-unused
+    TESTFCFLAGS+=-Wno-unused-parameter
 else ifeq ($(findstring ifort,$(shell $(FC) -v 2>&1)),ifort)
     COMPILER_TYPE=intel
     FCFLAGS+=-g -traceback
@@ -40,6 +42,7 @@ else ifeq ($(findstring ifort,$(shell $(FC) -v 2>&1)),ifort)
     FCFLAGS+=-Iinclude -module mod
     FCFLAGS+=-openmp
     LDFLAGS+=-openmp
+    TESTFCFLAGS+=-Wno-unused-parameter
 endif
 
 # .mod files are stored in this directory
@@ -94,7 +97,7 @@ bin/%: obj/%.o $$(OBJREQ_%.o)
 $(TESTS):$(PFUNIT)/include/driver.F90
 test/%: obj/%.o $$(OBJREQ_obj/%.o)
 	@mkdir -p $(dir $@)
-	$(FC) $(FCFLAGS) $(LDFLAGS) -L$(PFUNIT)/lib -DUSE_MPI -DSUITE=$*_suite -Wno-unused-parameter -o $@ $^ $(LDLIBS) -lpfunit
+	$(FC) $(FCFLAGS) $(TESTFCFLAGS) $(LDFLAGS) -L$(PFUNIT)/lib -DUSE_MPI -DSUITE=$*_suite -o $@ $^ $(LDLIBS) -lpfunit
 
 # Dependency generation
 deps/%.d: %.f90
