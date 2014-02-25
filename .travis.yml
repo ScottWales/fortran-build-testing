@@ -11,6 +11,8 @@ install:
     - sudo apt-get update
     - sudo apt-get install gfortran-4.8 libgomp1
     - sudo apt-get install openmpi-bin libopenmpi-dev
+    # Use the current stable version (2.1.0)
+    # See http://sourceforge.net/p/pfunit/mailman/message/31811969
     - git clone --depth 50 --branch pfunit_2.1.0 git://git.code.sf.net/p/pfunit/code pfunit-code
     - make -C pfunit-code MPI=yes OPENMP=yes
     - make install -C pfunit-code INSTALL_DIR=../pfunit
