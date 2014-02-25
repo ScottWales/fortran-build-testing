@@ -34,6 +34,7 @@ ifeq ($(findstring gcc,$(shell $(FC) -v 2>&1)),gcc)
     FCFLAGS+=-Wall -Wextra -Werror
     FCFLAGS+=-Iinclude -Jmod
     TESTFCFLAGS+=-Wno-unused
+    TESTFCFLAGS+=-Wno-uninitialized
     TESTFCFLAGS+=-Wno-unused-parameter
 else ifeq ($(findstring ifort,$(shell $(FC) -v 2>&1)),ifort)
     COMPILER_TYPE=intel
