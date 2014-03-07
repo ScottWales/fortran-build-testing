@@ -108,7 +108,7 @@ bin/%: obj/%.o $$(OBJREQ_%.o)
 $(TESTS):$(PFUNIT)/include/driver.F90
 test/%: obj/%.o $$(OBJREQ_obj/%.o)
 	@mkdir -p $(dir $@)
-	$(FC) $(FCFLAGS) $(TESTFCFLAGS) $(LDFLAGS) -L$(PFUNIT)/lib -DUSE_MPI -DSUITE=$*_suite -o $@ $^ $(LDLIBS) -lpfunit
+	$(FC) $(FCFLAGS) $(TESTFCFLAGS) $(LDFLAGS) -L$(PFUNIT)/lib -DUSE_MPI -DSUITE=$(notdir $*)_suite -o $@ $^ $(LDLIBS) -lpfunit
 
 # Dependency generation
 deps/%.d: %.f90
