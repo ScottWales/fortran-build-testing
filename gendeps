@@ -79,13 +79,17 @@ if modules:
 # Create a variable listing all the modules this file depends on - when
 # expanded this will turn into all of the objects required to make use of this
 # file
-outfile.write('OBJREQ_' + obj + '=' + 
-              ' '.join('$(MODPROV_%s)'%mod for mod in dependencies)+'\n')
+outfile.write('objectrequirements_' + obj + '=' + 
+              ' '.join('$(moduleprovider_%s)'%mod for mod in dependencies)+'\n')
+
+# List of modules provided by the file
+outfile.write('modulesprovided_' + obj + '=' + 
+              ' '.join(modules)+'\n')
 
 # Create a variable for each module in the file listing all the objects the
 # module depends on
 for mod in modules:
-    outfile.write('MODPROV_'+mod+'='+obj+' '+'$(OBJREQ_'+obj+')\n')
+    outfile.write('moduleprovider_'+mod+'='+obj+' '+'$(objectrequirements_'+obj+')\n')
 
 # Add to the list of programs
 if isProgram:

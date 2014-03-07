@@ -100,15 +100,15 @@ obj/%.o: obj/%.F90
 .SECONDEXPANSION:
 
 # Link programs
-bin/%: obj/%.o $$(OBJREQ_%.o)
+bin/%: obj/%.o $$(objectrequirements_%.o)
 	@mkdir -p $(dir $@)
 	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 # Link tests with driver
 $(TESTS):$(PFUNIT)/include/driver.F90
-test/%: obj/%.o $$(OBJREQ_obj/%.o)
+test/%: obj/%.o $$(objectrequirements_obj/%.o)
 	@mkdir -p $(dir $@)
-	$(FC) $(FCFLAGS) $(TESTFCFLAGS) $(LDFLAGS) -L$(PFUNIT)/lib -DUSE_MPI -DSUITE=$*_suite -o $@ $^ $(LDLIBS) -lpfunit
+	$(FC) $(FCFLAGS) $(TESTFCFLAGS) $(LDFLAGS) -L$(PFUNIT)/lib -DUSE_MPI -DSUITE=$(or $(basename $(modulesprovided_obj/$*.o)),$(notdir $*))_suite -o $@ $^ $(LDLIBS) -lpfunit
 
 # Dependency generation
 deps/%.d: %.f90
