@@ -1,7 +1,9 @@
 Makefile dependency detection for Fortran
 =========================================
 
-[![Build Status](https://travis-ci.org/ScottWales/fortran-build-testing.png?branch=master)](https://travis-ci.org/ScottWales/fortran-build-testing)
+[![Build Status](https://travis-ci.org/ScottWales/fortran-build-testing.png?branch=master)](https://travis-ci.org/ScottWales/fortran-build-testing) [![DOI](https://zenodo.org/badge/6662/ScottWales/fortran-build-testing.png)](http://dx.doi.org/10.5281/zenodo.12276)
+
+
 
 Fortran's module system makes it somewhat complicated to handle dependencies
 between different files when building. To compile a source file you need to
