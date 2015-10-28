@@ -92,6 +92,7 @@ obj/%.o: src/%.f90
 	$(FC) $(FCFLAGS) -c -o $@ $<
 
 # Process pFunit tests
+.PRECIOUS: obj/%.F90
 obj/%.F90: src/%.pf
 	@mkdir -p $(dir $@)
 	$(PFPARSE) $< $@
