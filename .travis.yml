@@ -1,7 +1,8 @@
 # Travis doesn't have a fortran build config, so we'll use c as a base and
 # create our own environment
 language: c
-compiler: gcc
+sudo: required
+
 env:
     global:
         - FC=gfortran-4.8
@@ -9,11 +10,18 @@ env:
 install:
     - sudo apt-add-repository --yes ppa:ubuntu-toolchain-r/test
     - sudo apt-get update
-    - sudo apt-get install gfortran-4.8 libgomp1
-    - sudo apt-get install openmpi-bin libopenmpi-dev
+    - sudo apt-get install gfortran-4.8 libgomp1 openmpi-bin libopenmpi-dev
+
     # Use the current stable version (2.1.0)
     # See http://sourceforge.net/p/pfunit/mailman/message/31811969
-    - git clone --depth 50 --branch pfunit_2.1.0 git://git.code.sf.net/p/pfunit/code pfunit-code
+    - git clone --depth 1 --branch pfunit_2.1.0 git://git.code.sf.net/p/pfunit/code pfunit-code
     - make -C pfunit-code MPI=yes OPENMP=yes
     - make install -C pfunit-code INSTALL_DIR=../pfunit
-script: make check PFUNIT=pfunit
+
+    - pip install --user codecov
+
+script: 
+    - make check PFUNIT=pfunit
+
+after_success:
+    - codecov
