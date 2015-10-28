@@ -10,7 +10,7 @@ env:
 install:
     - sudo apt-add-repository --yes ppa:ubuntu-toolchain-r/test
     - sudo apt-get update
-    - sudo apt-get install gfortran-4.8 libgomp1 openmpi-bin libopenmpi-dev
+    - sudo apt-get install gcc-4.8 gfortran-4.8 libgomp1 openmpi-bin libopenmpi-dev
 
     # Use the current stable version (2.1.0)
     # See http://sourceforge.net/p/pfunit/mailman/message/31811969
@@ -25,4 +25,4 @@ script:
 
 after_success:
     - find .
-    - codecov
+    - codecov --gcov-exec=gcov-4.8
