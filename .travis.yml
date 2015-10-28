@@ -24,4 +24,5 @@ script:
     - make check PFUNIT=pfunit
 
 after_success:
+    - find .
     - codecov
