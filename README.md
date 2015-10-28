@@ -1,7 +1,9 @@
 Makefile dependency detection for Fortran
 =========================================
 
-[![Build Status](https://travis-ci.org/ScottWales/fortran-build-testing.png?branch=master)](https://travis-ci.org/ScottWales/fortran-build-testing) [![DOI](https://zenodo.org/badge/6662/ScottWales/fortran-build-testing.png)](http://dx.doi.org/10.5281/zenodo.12276)
+[![Build Status](https://travis-ci.org/ScottWales/fortran-build-testing.png?branch=master)](https://travis-ci.org/ScottWales/fortran-build-testing) 
+[![codecov.io](https://codecov.io/github/ScottWales/fortran-build-testing/coverage.svg?branch=master)](https://codecov.io/github/ScottWales/fortran-build-testing?branch=master)
+[![DOI](https://zenodo.org/badge/6662/ScottWales/fortran-build-testing.png)](http://dx.doi.org/10.5281/zenodo.12276)
 
 
 
