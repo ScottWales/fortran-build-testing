@@ -20,6 +20,6 @@ subroutine test_mean()
     type(field) :: f
 
     call f%init(1,1,1)
-    f%dat = 10
-    @assertEqual(f%mean(), 10)
+    f%dat = 10.0
+    @assertEqual(f%mean(), 10.0)
 end subroutine
