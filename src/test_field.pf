@@ -1,0 +1,25 @@
+@test
+subroutine test_init()
+    use pfunit_mod
+    use field_mod
+
+    type(field) :: f
+
+    call f%init(1,1,1)
+    @assertEqual(size(f%dat), 1)
+
+    call f%init(10,1,1)
+    @assertEqual(size(f%dat), 10)
+end subroutine
+
+@test
+subroutine test_mean()
+    use pfunit_mod
+    use field_mod
+
+    type(field) :: f
+
+    call f%init(1,1,1)
+    f%dat = 10
+    @assertEqual(f%mean(), 10)
+end subroutine
