@@ -56,6 +56,12 @@ else ifeq ($(findstring ifort,$(shell $(FC) -v 2>&1)),ifort)
 
 endif
 
+ifdef TRAVIS
+    # Code coverage
+    FCFLAGS += --coverage
+    LDFLAGS += --coverage
+endif
+
 # .mod files are stored in this directory
 VPATH   += mod
 
