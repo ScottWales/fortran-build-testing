@@ -29,6 +29,7 @@ module field_mod
 contains
 
     subroutine init(this, nx, ny, nz)
+        !! Create a new Field with the given dimensions
         class(field), intent(out) :: this
         integer, intent(in) :: nx
         integer, intent(in) :: ny
@@ -38,6 +39,7 @@ contains
     end subroutine
 
     pure function mean(this) result(r)
+        !! Calculate the mean of the field
         class(field), intent(in) :: this
         real :: r
 
