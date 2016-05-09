@@ -1,0 +1,6 @@
+module purge
+module load intel-fc/16.0.3.210
+module load intel-cc/16.0.3.210
+module load openmpi
+module load pfunit
+module load pbs

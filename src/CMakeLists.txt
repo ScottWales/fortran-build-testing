@@ -1,8 +1,11 @@
-set(modules mod_a.F90 mod_b.F90)
+add_library(libfoo mod_a.f90 mod_b.f90)
 
-add_executable(prog_a prog_a.F90 ${modules})
-add_executable(prog_b prog_b.F90 ${modules})
+add_executable(prog_a prog_a.f90)
+add_executable(prog_b prog_b.f90)
 
-add_pfunit_sources(pfsources test_a.pf test_b.pf)
-add_executable(runtests ${pfsources} ${modules})
-add_test(runtests)
+add_pfunit_sources(pfsources test_a.pfunit test_b.pfunit)
+add_executable(runtests ${pfsources} $ENV{PFUNIT}/include/driver.F90)
+target_link_libraries(runtests pfunit)
+target_include_directories(runtests PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_definitions(runtests PUBLIC USE_MPI)
+add_test(NAME pfunit COMMAND mpirun -np 4 $<TARGET_FILE:runtests>)

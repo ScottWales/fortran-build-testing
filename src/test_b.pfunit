@@ -1,9 +1,9 @@
 ! A simple check to make sure unit tests are working
 
 @test
-subroutine checkTests()
+subroutine checkTests_b()
     use pfunit_mod
-    use mod_a
+    use mod_b
 
     @assertTrue(.true.)
 end subroutine
